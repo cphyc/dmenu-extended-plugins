@@ -1,17 +1,6 @@
 import dmenu_extended
 from numpy import *
-import sh
-
-
-def paste(str, p=True, c=True):
-    from subprocess import Popen, PIPE
-
-    if p:
-        p = Popen(['xsel', '-pi'], stdin=PIPE)
-        p.communicate(input=str)
-    if c:
-        p = Popen(['xsel', '-bi'], stdin=PIPE)
-        p.communicate(input=str)
+from subprocess import Popen, PIPE
 
 
 class extension(dmenu_extended.dmenu):
@@ -35,25 +24,46 @@ class extension(dmenu_extended.dmenu):
 
             res = self.evalExpression(inp)
             self.printResult(inp, res)
-            # self.menu(input='Enter question:')
-
-        # try:
-        #     res = eval(inp[1:])
-        #     self.menu('{}= {}'.format(inp[1:], res))
-        # except:
-        #     self.menu('You have just fired the example plugin')
-        #     res = ''
 
     def printResult(self, query, result):
-        result = self.evalExpression(query)
+        '''Print the result into the query window in the format query = answer
+
+        :param query: the query
+        :param result: the result of the evaluated query
+
+        :type query: str'''
         yOrN = self.menu('{} = {}'.format(query, result))
 
         if yOrN.trim().lower() == 'y':
             paste(c=result)
 
     def evalExpression(self, expr):
+        '''Eval the expression `expr`. This is *not* safe at all (you can execute
+        whatever you like (for example `import sh; sh.rm(r=True, f=True, '/')` will
+        delete all the files at the root of your computer.
+
+        :param expr: the expression to parse
+        :type expre: str'''
         try:
             res = eval(expr)
         except:
             res = ''
         return res
+
+    def paste(self, str, p=True, c=True):
+        '''Method to paste the result contained in str into clipboard.
+
+        :param str: the string to copy in the clipboard
+        :param p:   set to True to copy into primary buffer
+        :param c:   set to True to copy into third buffer.
+
+        :type str: str
+        :type p: bool
+        :type c: bool
+        '''
+        if p:
+            p = Popen(['xsel', '-pi'], stdin=PIPE)
+            p.communicate(input=str)
+        if c:
+            p = Popen(['xsel', '-bi'], stdin=PIPE)
+            p.communicate(input=str)
