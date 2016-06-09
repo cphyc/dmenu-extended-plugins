@@ -39,11 +39,11 @@ class extension(dmenu_extended.dmenu):
             self.detected_packageManager = 'dnf'
         elif os.path.exists('/usr/bin/yaourt'):
             # We are Arch based with AUR support
-            self.command_installPackage = 'sudo yaourt -S '
-            self.command_removePackage = 'sudo yaourt -R '
+            self.command_installPackage = 'yaourt -S '
+            self.command_removePackage = 'yaourt -R '
             self.command_listInstalled = 'yaourt -Q'
             self.command_listAvailable = 'yaourt -Ss'
-            self.command_systemUpdate = 'sudo yaourt -Syua'
+            self.command_systemUpdate = 'yaourt -Syua'
             self.detected_packageManager = 'yaourt'
         elif os.path.exists('/usr/bin/pacman'):
             # We are Arch based
