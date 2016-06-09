@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 import dmenu_extended
 import os
 
@@ -37,6 +37,14 @@ class extension(dmenu_extended.dmenu):
             self.command_listAvailable = ["dnf", "search", ""]
             self.command_systemUpdate = 'sudo dnf update'
             self.detected_packageManager = 'dnf'
+        elif os.path.exists('/usr/bin/yaourt'):
+            # We are Arch based with AUR support
+            self.command_installPackage = 'sudo yaourt -S '
+            self.command_removePackage = 'sudo yaourt -R '
+            self.command_listInstalled = 'yaourt -Q'
+            self.command_listAvailable = 'yaourt -Ss'
+            self.command_systemUpdate = 'sudo yaourt -Syua'
+            self.detected_packageManager = 'yaourt'
         elif os.path.exists('/usr/bin/pacman'):
             # We are Arch based
             self.command_installPackage = 'sudo pacman -S '
